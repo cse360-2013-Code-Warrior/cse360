@@ -1,0 +1,9 @@
+<pre>
+    Welcome to the CSE360 Medical database website.  It just became (almost) fully functional Wednesday, January 30th 2013.
+
+    If you have not done so, please register.
+
+    Things to do before website is completely done:
+        * Add email functionality to registration
+        * Expand registration to include Contact and Insurance information
+</pre> 
