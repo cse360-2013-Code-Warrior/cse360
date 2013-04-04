@@ -1,7 +1,7 @@
-
-
 <script language="php">
     session_start();
+
+    include 'database.php';
 
     class LOGIN
     {
@@ -39,8 +39,7 @@
             print ( '               <td width="80%" valign="top" id="view_page_data">' );
             print ( '               <b>' );
 
-            $this->register_print();
-
+            $this->LOGIN_print();
         }
 
         public function LOGIN_footer()
@@ -50,49 +49,7 @@
             print ( '</html>' );
         }
 
-        public function LOGIN_print()
-        {
-            print ( '            <form action="guest.php" method="post">' );
-            print ( '                <pre><BR>' );
-
-            print ( '                    First Name               <input type="text" name="user_name_first"><BR>' );
-            print ( '                    Last Name                <input type="text" name="user_name_last"><BR>' );
-            print ( '                    SSN                      <input type="text" name="user_ssn"><BR>' );
-            print ( '                    Username                 <input type="text" name="user_name_login"><BR>' );
-            print ( '                    Password                 <input type="password" name="user_name_password"><BR>' );
-            print ( '                    Re-enter Password        <input type="password" name="user_name_password"><BR>' );
-            print ( '                    Email                    <input type="text" name="user_name_email"><BR>' );
-            print ( '                    <BR>' ); 
-
-            print ( '                    Mailing Address          <input type="text" name="contact_address"><BR>' );
-            print ( '                    Mailing City             <input type="text" name="contact_city"><BR>' );
-            print ( '                    Mailing Zip Code         <input type="text" name="contact_zip"><BR>' );
-            print ( '                    Contact phone number     <input type="text" name="contact_phone"><BR>' );
-            print ( '                    <BR>' );
-
-            print ( '                    Pharmacy Name            <input type="text" name="pharmacy_name"><BR>' );
-            print ( '                    Pharmacy Address         <input type="text" name="pharmacy_address"><BR>' );
-            print ( '                    Pharmacy City            <input type="text" name="pharmacy_city"><BR>' );
-            print ( '                    Pharmacy Phone           <input type="text" name="pharmacy_phone"><BR>' );
-            print ( '                    <BR>' );
-
-            print ( '                    <input type="submit" name="Menu_Selection" value="Submit Registration">' );
-            print ( '                </pre><BR>' );
-            print ( '            </form>' );
-        }
-        
-        public function LOGIN_user( )
-        {
-            print ( '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transittional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' );
-            print ( '<html>' );
-            print ( '    <body>' );
-            print ( '        <head>' );
-            print ( '            <title>' );
-            print ( '                '.($_SESSION['Website']) );
-            print ( '            </title>' );
-        }
-        
-                public function login_user()
+        public function LOGIN_user()
         {
             $sql_connection = new database_SQL;
 
@@ -111,7 +68,7 @@
                     $_SESSION['login_address']       = $_SERVER['REMOTE_ADDR'];
                     $_SESSION['login_active']        = $sql_result['user_name_active'];
                     $_SESSION['login_admin']         = $sql_result['user_name_admin_approved'];
-                    $_SESSION['login_description']   = $sql_result['user_name_description'];
+                    $_SESSION['login_type']          = $sql_result['user_name_description'];
                 }
                 else
                 {
@@ -123,15 +80,27 @@
                 print( "<BR>Unable to verify login<BR>" );
                 $_SESSION['login_failed'] = "No such user id";
             }
+
+            print( $sql_result );
+            unset($_POST['Menu_Selection']);
+            header("location:index.php");
         }
         
-                public function login_print()
+        public function LOGIN_print()
         {
+            if( isset($_POST['user_name_post']) == TRUE )
+            {
+                $this->LOGIN_user();
+                print( "True" );
+                unset($_POST['Menu_Selection']);
+                return;
+            }
+
             print('<br>');
             print('<br>');
             print('<br>');
             print('<pre>');
-            print('<form action="index.php" method="post">');
+            print('<form action="login.php" method="post">');
             print('Username:  ');
             print('<input type="text" name="user_name_post">');
             print('<br>');
@@ -142,13 +111,11 @@
             print('</form>');
             print('</pre>');
         }
-    
-
     }
 
 
-    $web_user = new HTML();
-    $web_user->HTML_header( );
-    $web_user->HTML_menu( );
-    $web_user->HTML_footer( );
+    $web_user = new LOGIN();
+    $web_user->LOGIN_header( );
+    $web_user->LOGIN_menu( );
+    $web_user->LOGIN_footer( );
 </script>
