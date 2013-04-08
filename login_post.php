@@ -71,8 +71,8 @@
                 {
                     $_SESSION['login_name']          = $login_name;
                     $_SESSION['login_address']       = $_SERVER['REMOTE_ADDR'];
-                    $_SESSION['login_active']        = $sql_result['user_name_active'];
-                    $_SESSION['login_admin']         = $sql_result['user_name_admin_approved'];
+                    $_SESSION['login_active']        = strtoupper($sql_result['user_name_active']);
+                    $_SESSION['login_admin']         = strtoupper($sql_result['user_name_admin_approved']);
                     $_SESSION['login_type']          = $sql_result['user_name_description'];
 
                     header("location:index.php");
