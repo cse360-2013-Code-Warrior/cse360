@@ -46,16 +46,16 @@
                     header("location:doctor.php");
                     break;
 
-                case "nurse":
-                    header("location:nurse.php");
+                case "staff":
+                    header("location:staff.php");
                     break;
 
                 case "patient":
-                    header("location:nurse.php");
+                    header("location:patient.php");
                     break;
 
                 default:
-                    print( 'You choose:  '.$web_selection );
+                    print( 'You choose:  '.$_SESSION['login_type'] );
             }
         }
 

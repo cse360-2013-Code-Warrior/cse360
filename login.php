@@ -1,7 +1,7 @@
 <script language="php">
     session_start();
 
-
+    include 'database.php';
 
     class LOGIN
     {
@@ -39,7 +39,14 @@
             print ( '               <td width="80%" valign="top" id="view_page_data">' );
             print ( '               <b>' );
 
-            $this->LOGIN_print();
+            if ( isset($_SESSION['user_name_post']) == False )
+            {
+                $this->LOGIN_print();
+            }
+            else
+            {
+                $this->LOGIN_user();
+            }
         }
 
         public function LOGIN_footer()
@@ -65,6 +72,45 @@
             print('                <input type="submit" name="Menu_Selection" value="Login">');
             print('</form>');
             print('</pre>');
+        }
+
+        public function LOGIN_user()
+        {
+            $sql_connection = new database_SQL;
+
+            $login_name     = $_SESSION['user_name_post'];
+            $login_pass     = $_SESSION['user_password_post'];
+
+            print( $login_name + "<BR>" );
+            print( $login_pass + "<BR>" );
+
+            $login_query    = "SELECT * FROM personal WHERE user_name_login='".$login_name."'";
+            $sql_result     = $sql_connection->SQL_command( $login_query );
+
+            print_r( $sql_result );
+
+            if( count($sql_result) > 0 )
+            {
+                if( ($login_pass == $sql_result['user_name_password']) && ( $login_name == $sql_result['user_name_login']) && ( 'Y' == strtoupper($sql_result['user_name_active'])))
+                {
+                    $_SESSION['login_name']          = $login_name;
+                    $_SESSION['login_address']       = $_SERVER['REMOTE_ADDR'];
+                    $_SESSION['login_active']        = strtoupper($sql_result['user_name_active']);
+                    $_SESSION['login_admin']         = strtoupper($sql_result['user_name_admin_approved']);
+                    $_SESSION['login_type']          = $sql_result['user_name_description'];
+
+                    header("location:index.php");
+                }
+                else
+                {
+                    $_SESSION['login_failed'] = "Incorrect password";
+                }
+            }
+            else
+            {
+                print( "<BR>Unable to verify login<BR>" );
+                $_SESSION['login_failed'] = "No such user id";
+            }
         }
     }
 

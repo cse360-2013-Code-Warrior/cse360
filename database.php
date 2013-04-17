@@ -3,7 +3,7 @@
     {
         public function SQL_command( $SQL_String )
         {
-            print("database called <BR>");
+            //print("database called <BR>");
             //  Check username and password against MySQL
             DEFINE('DB_USER', 'root');
             DEFINE('DB_PASSWORD', 'usbw');
@@ -17,13 +17,21 @@
                 //  Setting auto commit to false
                 mysqli_autocommit($database_connection, FALSE);
 
+                //if Insert due row_data else due sql_result
                 $sql_result = mysqli_query($database_connection, $SQL_String);
                 $row_data   = mysqli_fetch_array($sql_result, MYSQLI_ASSOC);
 
                 // commit transaction so that we have a insurance information
                 mysqli_commit($database_connection);
 
-                return $row_data;
+                if ( $_SESSION['login_name'] == 'guest')            // Alternate route, non-functional  -> ( strpos($SQL_String, '*') > 0 )
+                {
+                    return $row_data;
+                }
+                else
+                {
+                    return $sql_result;
+                }
             }
             else
             {
