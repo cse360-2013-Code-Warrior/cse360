@@ -43,7 +43,7 @@
         mysqli_query( $sqlAccess, "INSERT INTO personal (user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_admin_approved, user_name_active) VALUES ('CSE', 'Demonstration', '000-00-0000', 'DOCTOR', 'test', 'cse360@asu.edu', 'doctor', 'Y','Y')" );
         mysqli_query( $sqlAccess, "INSERT INTO personal (user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_admin_approved, user_name_active) VALUES ('CSE', 'Demonstration', '000-00-0000', 'ADMIN', 'test', 'cse360@asu.edu', 'admin', 'Y','Y')" );
         mysqli_query( $sqlAccess, "INSERT INTO personal (user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_admin_approved, user_name_active) VALUES ('CSE', 'Demonstration', '000-00-0000', 'STAFF', 'test', 'cse360@asu.edu', 'staff', 'Y','Y')" );
-        mysqli_query( $sqlAccess, "INSERT INTO personal (user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_admin_approved, user_name_active) VALUES ('CSE', 'Demonstration', '000-00-0000', 'PATIENT', 'test', 'cse360@asu.edu', 'patient', 'Y','N')" );
+        mysqli_query( $sqlAccess, "INSERT INTO personal (user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_admin_approved, user_name_active) VALUES ('CSE', 'Demonstration', '000-00-0000', 'PATIENT', 'test', 'cse360@asu.edu', 'patient', 'N','Y')" );
         mysqli_commit($sqlAccess);
     }
 
