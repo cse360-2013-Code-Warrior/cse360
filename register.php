@@ -39,6 +39,28 @@
             print ( '               <td width="80%" valign="top" id="view_page_data">' );
             print ( '               <b>' );
 
+
+            if( isset($_SESSION['user_name_password']) == TRUE )
+            {
+                if( $_SESSION['user_name_password'] != $_SESSION['user_name_password2'] )
+                {
+                    print( "<BR>MISMATCH Password<BR>PASSWORDS FIELDS MUST HAVE SAME PASSWORD ENTERED<BR><BR>" );
+                    $this->register_print();
+                    return;
+                }
+
+                if( $test_count > 0 )
+                {
+                    print( "<BR>USERNAME already in use<BR>If you already have an account but have forgotten your username, please contact the doctor office to reset your password<BR>otherwise please choose a different username.<BR><BR>" );
+                    $this->register_print();
+                    return;
+                }
+
+                
+                $this->REGISTER_add();
+                return;
+            }
+
             $this->register_print();
 
         }
@@ -52,69 +74,129 @@
 
         public function REGISTER_print()
         {
-            if( isset($_POST['user_name_password']) == TRUE )
+            if( isset($_SESSION['user_name_password']) == TRUE )
             {
-                $this->REGISTER_add();
-                print( "True" );
-                unset($_POST['Menu_Selection']);
-                return;
-            }
-
-            //if( isset($_POST['Menu_Selection']) == FALSE )
-            //{
-                print ( '            <form action="register.php" method="post">' );
+                print ( '            <form action="register_post.php" method="post">' );
                 print ( '                <pre><BR>' );
-    
-                print ( '                    First Name               <input type="text" name="user_name_first"><BR>' );
-                print ( '                    Last Name                <input type="text" name="user_name_last"><BR>' );
-                print ( '                    SSN                      <input type="text" name="user_ssn"><BR>' );
-                print ( '                    Username                 <input type="text" name="user_name_login"><BR>' );
+                print ( '                    First Name               <input type="text" value="' . $_SESSION["user_name_first"] . '" name="user_name_first"><BR>' );
+                print ( '                    Last Name                <input type="text" value="' . $_SESSION["user_name_last"]  . '" name="user_name_last"><BR>' );
+                print ( '                    SSN                      <input type="text" value="' . $_SESSION["user_ssn"]        . '" name="user_ssn"><BR>' );
+                print ( '                    Username                 <input type="text" value="' . $_SESSION["user_name_login"] . '" name="user_name_login"><BR>' );
                 print ( '                    Password                 <input type="password" name="user_name_password"><BR>' );
                 print ( '                    Re-enter Password        <input type="password" name="user_name_password2"><BR>' );
-                print ( '                    Email                    <input type="text" name="user_name_email"><BR>' );
+                print ( '                    Email                    <input type="text" value="' . $_SESSION['user_name_email'] . '" name="user_name_email"><BR>' );
                 print ( '                    <BR>' ); 
-
+    
                 print ( '                    <BR>' ); 
-                print ( '                    Doctor                    <input type="text" name="user_name_doctor"><BR>' );
+                print ( '                    Doctor                   <input type="text" value="' . $_SESSION["user_name_doctor"] . '" name="user_name_doctor"><BR>' );
                 print ( '                    <BR>' ); 
-
-                print ( '                    Mailing Address          <input type="text" name="contact_address"><BR>' );
-                print ( '                    Mailing City             <input type="text" name="contact_city"><BR>' );
-                print ( '                    Mailing Zip Code         <input type="text" name="contact_zip"><BR>' );
-                print ( '                    Contact phone number     <input type="text" name="contact_phone"><BR>' );
+    
+                print ( '                    Mailing Address          <input type="text" value="' . $_SESSION["contact_address"] . '" name="contact_address"><BR>' );
+                print ( '                    Mailing City             <input type="text" value="' . $_SESSION["contact_city"]    . '" name="contact_city"><BR>' );
+                print ( '                    Mailing Zip Code         <input type="text" value="' . $_SESSION["contact_zip"]     . '" name="contact_zip"><BR>' );
+                print ( '                    Contact phone number     <input type="text" value="' . $_SESSION["contact_phone"]   . '" name="contact_phone"><BR>' );
                 print ( '                    <BR>' );
     
-                print ( '                    Pharmacy Name            <input type="text" name="pharmacy_name"><BR>' );
-                print ( '                    Pharmacy Address         <input type="text" name="pharmacy_address"><BR>' );
-                print ( '                    Pharmacy City            <input type="text" name="pharmacy_city"><BR>' );
-                print ( '                    Pharmacy Phone           <input type="text" name="pharmacy_phone"><BR>' );
+                print ( '                    Pharmacy Name            <input type="text" value="' . $_SESSION["pharmacy_name"]    . '" name="pharmacy_name"><BR>' );
+                print ( '                    Pharmacy Address         <input type="text" value="' . $_SESSION["pharmacy_address"] . '" name="pharmacy_address"><BR>' );
+                print ( '                    Pharmacy City            <input type="text" value="' . $_SESSION["pharmacy_city"]    . '" name="pharmacy_city"><BR>' );
+                print ( '                    Pharmacy Phone           <input type="text" value="' . $_SESSION["pharmacy_phone"]   . '" name="pharmacy_phone"><BR>' );
                 print ( '                    <BR>' );
     
                 print ( '                    <input type="submit" name="Menu_Selection" value="Submit Registration">' );
                 print ( '                </pre><BR>' );
                 print ( '            </form>' );
-            //}
+
+                unset( $_SESSION['user_name_first'] );
+                unset( $_SESSION['user_name_last'] );
+                unset( $_SESSION['user_name_email'] );
+                unset( $_SESSION['user_name_login'] );
+                unset( $_SESSION['user_name_password'] );
+                unset( $_SESSION['user_name_password2'] );
+                unset( $_SESSION['user_name_doctor'] );
+                unset( $_SESSION['user_ssn'] );
+                unset( $_SESSION['pharmacy_phone'] );
+                unset( $_SESSION['contact_address'] );
+                unset( $_SESSION['contact_city'] );
+                unset( $_SESSION['contact_zip'] );
+                unset( $_SESSION['pharmacy_name'] );
+                unset( $_SESSION['pharmacy_address'] );
+                unset( $_SESSION['pharmacy_city'] );
+                unset( $_SESSION['pharmacy_phone'] );
+
+                return;
+            }
+
+            print ( '            <form action="register_post.php" method="post">' );
+            print ( '                <pre><BR>' );
+
+            print ( '                    First Name               <input type="text" name="user_name_first"><BR>' );
+            print ( '                    Last Name                <input type="text" name="user_name_last"><BR>' );
+            print ( '                    SSN                      <input type="text" name="user_ssn"><BR>' );
+            print ( '                    Username                 <input type="text" name="user_name_login"><BR>' );
+            print ( '                    Password                 <input type="password" name="user_name_password"><BR>' );
+            print ( '                    Re-enter Password        <input type="password" name="user_name_password2"><BR>' );
+            print ( '                    Email                    <input type="text" name="user_name_email"><BR>' );
+            print ( '                    <BR>' ); 
+
+            print ( '                    <BR>' ); 
+            print ( '                    Doctor                   <input type="text" name="user_name_doctor"><BR>' );
+            print ( '                    <BR>' ); 
+
+            print ( '                    Mailing Address          <input type="text" name="contact_address"><BR>' );
+            print ( '                    Mailing City             <input type="text" name="contact_city"><BR>' );
+            print ( '                    Mailing Zip Code         <input type="text" name="contact_zip"><BR>' );
+            print ( '                    Contact phone number     <input type="text" name="contact_phone"><BR>' );
+            print ( '                    <BR>' );
+
+            print ( '                    Pharmacy Name            <input type="text" name="pharmacy_name"><BR>' );
+            print ( '                    Pharmacy Address         <input type="text" name="pharmacy_address"><BR>' );
+            print ( '                    Pharmacy City            <input type="text" name="pharmacy_city"><BR>' );
+            print ( '                    Pharmacy Phone           <input type="text" name="pharmacy_phone"><BR>' );
+            print ( '                    <BR>' );
+
+            print ( '                    <input type="submit" name="Menu_Selection" value="Submit Registration">' );
+            print ( '                </pre><BR>' );
+            print ( '            </form>' );
         }
 
         public function REGISTER_add()
         {
             $database_connection = new database_SQL;
 
-            $first_name     = $_POST['user_name_first'];
-            $last_name      = $_POST['user_name_last'];
-            $email_data     = $_POST['user_name_email'];
-            $user_name      = strtoupper($_POST['user_name_login']);
-            $password_data  = $_POST['user_name_password'];
-            $doctor_name    = $_POST['user_name_doctor'];
-            $SSN            = $_POST['user_ssn'];
-            $phone          = $_POST['pharmacy_phone'];
-            $address        = $_POST['contact_address'];
-            $city           = $_POST['contact_city'];
-            $zip            = $_POST['contact_zip'];
-            $pharmacy_name  = $_POST['pharmacy_name'];
-            $pharmacy_addr  = $_POST['pharmacy_address'];
-            $pharmacy_city  = $_POST['pharmacy_city'];
-            $pharmacy_ph    = $_POST['pharmacy_phone'];
+            $first_name     = $_SESSION['user_name_first'];
+            $last_name      = $_SESSION['user_name_last'];
+            $email_data     = $_SESSION['user_name_email'];
+            $user_name      = strtoupper($_SESSION['user_name_login']);
+            $password_data  = $_SESSION['user_name_password'];
+            $doctor_name    = $_SESSION['user_name_doctor'];
+            $SSN            = $_SESSION['user_ssn'];
+            $phone          = $_SESSION['pharmacy_phone'];
+            $address        = $_SESSION['contact_address'];
+            $city           = $_SESSION['contact_city'];
+            $zip            = $_SESSION['contact_zip'];
+            $pharmacy_name  = $_SESSION['pharmacy_name'];
+            $pharmacy_addr  = $_SESSION['pharmacy_address'];
+            $pharmacy_city  = $_SESSION['pharmacy_city'];
+            $pharmacy_ph    = $_SESSION['pharmacy_phone'];
+
+            unset( $_SESSION['user_name_first'] );
+            unset( $_SESSION['user_name_last'] );
+            unset( $_SESSION['user_name_email'] );
+            unset( $_SESSION['user_name_login'] );
+            unset( $_SESSION['user_name_password'] );
+            unset( $_SESSION['user_name_password2'] );
+            unset( $_SESSION['user_name_doctor'] );
+            unset( $_SESSION['user_ssn'] );
+            unset( $_SESSION['pharmacy_phone'] );
+            unset( $_SESSION['contact_address'] );
+            unset( $_SESSION['contact_city'] );
+            unset( $_SESSION['contact_zip'] );
+            unset( $_SESSION['pharmacy_name'] );
+            unset( $_SESSION['pharmacy_address'] );
+            unset( $_SESSION['pharmacy_city'] );
+            unset( $_SESSION['pharmacy_phone'] );
+            unset( $_SESSION['Selection'] );
 
             $query_login = "INSERT INTO personal(user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_doctor, user_name_admin_approved, user_name_active) VALUES('".$first_name."', '".$last_name."', '".$SSN."', '".$user_name."', '".$password_data."', '".$email_data."', 'patient', '".$doctor_name."', 'N','N')";
             $database_connection->SQL_command( $query_login );

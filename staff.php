@@ -1,5 +1,7 @@
 <script language="php">
     session_start();
+    include 'database.php';
+    include 'record.php';
 
     class STAFF
     {
@@ -19,10 +21,9 @@
             switch( $_SESSION['Selection'] )
             {
                 case 'Update Personal Information':
-                    print("<BR>Only logged in personal can see thier information here");
-                    print("<BR>Change / Update personal information (Last name, login, password, email, primary doctor");
-                    print("<BR>Change / Update contact information");
-                    print("<BR>Change / Update Insurance information");
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_personal();
+                    $personal_record = NULL;
                     unset($_SESSION['Selection']);
                     break;
 

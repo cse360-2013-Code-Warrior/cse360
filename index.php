@@ -21,6 +21,11 @@
     {
         $_SESSION['Selection'] = $_POST['Menu_Selection'];
     }
+
+    if( isset($_SESSION['Selection']) == FALSE )
+    {
+        $_SESSION['Selection']  = 'UNKNOWN';
+    }
 </script>
     
 <script language="php">

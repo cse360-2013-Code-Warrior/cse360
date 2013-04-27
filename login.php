@@ -86,8 +86,7 @@
 
             $login_query    = "SELECT * FROM personal WHERE user_name_login='".$login_name."'";
             $sql_result     = $sql_connection->SQL_command( $login_query );
-
-            print_r( $sql_result );
+            $sql_result     = mysqli_fetch_array($sql_result, MYSQLI_ASSOC);
 
             if( count($sql_result) > 0 )
             {
@@ -98,22 +97,36 @@
                     $_SESSION['login_active']        = strtoupper($sql_result['user_name_active']);
                     $_SESSION['login_admin']         = strtoupper($sql_result['user_name_admin_approved']);
                     $_SESSION['login_type']          = $sql_result['user_name_description'];
+                    $_SESSION['login_id']            = $sql_result['user_id'];
+
+                    $login_query    = "INSERT INTO web_tracking(user_id, web_tracking_browser, web_tracking_ip, web_tracking_session_id) VALUES('".$_SESSION['login_id']."', '".$_SERVER['HTTP_USER_AGENT']."', '".$_SERVER['REMOTE_ADDR']."', '".session_id()."')";
+                    $sql_result     = $sql_connection->SQL_command( $login_query );
+
+                    unset( $_SESSION['Selection'] );
 
                     header("location:index.php");
                 }
                 else
                 {
                     $_SESSION['login_failed'] = "Incorrect password";
+                    // Ending session
+                    session_destroy();
                 }
             }
             else
             {
                 print( "<BR>Unable to verify login<BR>" );
-                $_SESSION['login_failed'] = "No such user id";
+                // Ending session
+                session_destroy();
             }
         }
     }
 
+    //logging daily reports of visitors and actions
+    $date = new DateTime();
+    $logfile    = $_SERVER['DOCUMENT_ROOT'].'\\'.(date("Y_m_d")).'_daily_report.log'; 
+    $log_event  = fopen( $logfile,'a' );
+    fwrite($log_event, ((date("Y_m_d  H:i:s"))."\t".$_SERVER['REMOTE_ADDR']."\t".$_SESSION['login_name']."\tLogging In\r\n") );
 
     $web_user = new LOGIN();
     $web_user->LOGIN_header( );

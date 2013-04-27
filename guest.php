@@ -89,6 +89,11 @@
         }
     }
 
+    //logging daily reports of visitors and actions
+    $date = new DateTime();
+    $logfile    = $_SERVER['DOCUMENT_ROOT'].'\\'.(date("Y_m_d")).'_daily_report.log'; 
+    $log_event  = fopen( $logfile,'a' );
+    fwrite($log_event, ((date("Y_m_d  H:i:s"))."\t".$_SERVER['REMOTE_ADDR']."\t".$_SESSION['login_name']."\t".$_SESSION['Selection']."\r\n") );
 
     $web_user = new GUEST();
     $web_user->GUEST_header( );

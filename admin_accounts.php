@@ -1,16 +1,18 @@
 <script language="php">
 
-    include "database.php" ;
-
     $query          = "SELECT * FROM personal";
     $sql_connection = new database_SQL;
     $sql_result     = $sql_connection->SQL_command( $query );
 
-    while( $row_data = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC ))
+    while( $row_data = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC ) )
     {
         print('<form action="admin_accounts_post.php" method="post">');
         print('<pre>');
-    
+
+        print('Account ID          ');
+        print('<input type="text" name="pst_user_id" size="'.strlen($row_data['user_id']).'" value="'.$row_data['user_id'].'" readonly> ');
+        print('<br>');
+
         print('First Name          ');
         print('<input type="text" name="pst_user_name_first" size="'.strlen($row_data['user_name_first']).'" value="'.$row_data['user_name_first'].'"> ');
         print('<br>');
@@ -32,7 +34,7 @@
         print('<br>');
     
         print('Pass                ');
-        print('<input type="text" name="pst_user_name_password" size="'.strlen($row_data['user_name_password']).'" value="'.$row_data['user_name_password'].'"> ');
+        print('<input type="password" name="pst_user_name_password" size="'.strlen($row_data['user_name_password']).'" value="'.$row_data['user_name_password'].'"> ');
         print('<br>');
     
         print('Administrator       ');
@@ -83,7 +85,7 @@
             print('<option value="admin">admin</option>');
         }
 
-        if( ($row_data['user_name_description']) == 'admin' )
+        if( ($row_data['user_name_description']) == 'doctor' )
         {
             print('<option value="staff">staff</option>');
             print('<option value="patient">patient</option>');
@@ -102,16 +104,8 @@
         print('</select>');
         print('<br>');
     
-        print('                    <select name="pst_Data Modification"> ');
-        print('<option value="TRUE">Delete User</option>');
-        print('<option value="USERNAME">Alter Username</option>');
-        print('<option value="FALSE" selected="selected">Modify Only</option>');
-        print('</select>');
-    
-    
         print('<br>');
         print('       <input name="Modify" type="submit" value="Modify" >');
-        print('    <input name="Delete" type="submit" value="Delete" >');
     
         print('<br>');
         print('<br>');

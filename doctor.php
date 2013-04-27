@@ -1,5 +1,7 @@
 <script language="php">
     session_start();
+    include 'database.php';
+    include 'record.php';
 
     class DOCTOR
     {
@@ -19,10 +21,9 @@
             switch( $_SESSION['Selection'] )
             {
                 case 'Update Personal Information':
-                    print("<BR>Only logged in personal can see thier information here");
-                    print("<BR>Change / Update personal information (Last name, login, password, email, primary doctor");
-                    print("<BR>Change / Update contact information");
-                    print("<BR>Change / Update Insurance information");
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_personal();
+                    $personal_record = NULL;
                     unset($_SESSION['Selection']);
                     break;
 
@@ -72,6 +73,10 @@
                     print('</table>');
                     print('</pre>');
                     unset($_SESSION['Selection']);
+                    break;
+
+                case "UNKNOWN":
+                    include( 'news.txt' );
                     break;
 
                 case "Logout":
@@ -162,6 +167,12 @@
             print ( '</html>' );
         }
     }
+
+    //logging daily reports of visitors and actions
+    $date = new DateTime();
+    $logfile    = $_SERVER['DOCUMENT_ROOT'].'\\'.(date("Y_m_d")).'_daily_report.log'; 
+    $log_event  = fopen( $logfile,'a' );
+    fwrite($log_event, ((date("Y_m_d  H:i:s"))."\t".$_SERVER['REMOTE_ADDR']."\t".$_SESSION['login_name']."\t".$_SESSION['Selection']."\r\n") );
 
     $web_user = new DOCTOR();
     $web_user->DOCTOR_header( );

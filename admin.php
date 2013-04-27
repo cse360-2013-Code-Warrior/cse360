@@ -1,5 +1,7 @@
 <script language="php">
     session_start();
+    include 'database.php';
+    include 'record.php';
 
     class ADMIN
     {
@@ -19,10 +21,9 @@
             switch( $_SESSION['Selection'] )
             {
                 case 'Update Personal Information':
-                    print("<BR>Only logged in personal can see thier information here");
-                    print("<BR>Change / Update personal information (Last name, login, password, email, primary doctor");
-                    print("<BR>Change / Update contact information");
-                    print("<BR>Change / Update Insurance information");
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_personal();
+                    $personal_record = NULL;
                     unset($_SESSION['Selection']);
                     break;
 
@@ -32,8 +33,34 @@
                     break;
 
                 case 'Accounts Post':
+                    $database_connection = new database_SQL;
+                    
+                    if( $_SESSION['Account Modify'] == 'Modify' )
+                    {
+                        $query_login = "UPDATE personal SET user_name_first='".$_SESSION['pst_user_name_first']."', user_name_last='".$_SESSION['pst_user_name_last']."', user_name_doctor='".$_SESSION['pst_user_name_doctor']."', user_name_login='".$_SESSION['pst_user_name_login']."', user_name_email='".$_SESSION['pst_user_name_email']."', user_name_password='".$_SESSION['pst_user_name_password']."', user_name_admin_approved='".$_SESSION['pst_user_name_admin_approved']."', user_name_active='".$_SESSION['pst_user_name_active']."', user_name_description='".$_SESSION['pst_user_name_description']."' WHERE user_id='".$_SESSION['pst_user_id']."'";
+
+                        //  Running Query
+                        $user_exists = $database_connection->SQL_command( $query_login );
+    
+                        if( $user_exists == TRUE )
+                        {
+                            $_SESSION['register_sucess'] = TRUE;
+                            print('<br>');
+                            print('<br>');
+                            print('<br>');
+                            print('<br>Account successfully modified.');
+                        }
+                        else
+                        {
+                            print('<br>');
+                            print('<br>');
+                            print_r($query_login);
+                            print('<br>');
+                            print('<br>Query failed to update database.');
+                            print('<br>Please try again.');
+                        }
+                    }
                     // unset all previously set terms
-                    print_r( $_SESSION );
                     unset($_SESSION['Selection']);
                     break;
 
@@ -78,6 +105,10 @@
                     header( "location:logout.php" );
                     break;
 
+                case "UNKNOWN":
+                    include( 'news.txt' );
+                    break;
+
                 default:
                     print_r( $_SESSION );
                     print( "<BR><BR><BR>" );
@@ -111,10 +142,11 @@
             print ( '<pre>' );
     
             print ( "<ul>" );
-    
+            print( '<li>');    
             print( '<form action="index.php" method="post">' );
             print( '<input type="submit" name="Menu_Selection" value="Admin">' );
             print( '</form>' );
+            print( '</li>');
 
             print( '<li>');
             print( '<form action="index.php" method="post">' );
@@ -150,7 +182,12 @@
             print ( '</html>' );
         }
     }
-
+    
+    //logging daily reports of visitors and actions
+    $date = new DateTime();
+    $logfile    = $_SERVER['DOCUMENT_ROOT'].'\\'.(date("Y_m_d")).'_daily_report.log'; 
+    $log_event  = fopen( $logfile,'a' );
+    fwrite($log_event, ((date("Y_m_d  H:i:s"))."\t".$_SERVER['REMOTE_ADDR']."\t".$_SESSION['login_name']."\t".$_SESSION['Selection']."\r\n") );
 
     //  Automatic garbage collection occures at end of script every time.
     $web_user = new ADMIN();
