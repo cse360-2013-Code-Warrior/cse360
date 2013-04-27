@@ -35,6 +35,13 @@
                     include( 'news.txt' );
                     break;
 
+                case "Medical Visit Information":
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_medical_view($_SESSION['login_id']);
+                    $personal_record = NULL;
+                    unset($_SESSION['Selection']);
+                    break;
+
                 default:
                     print_r( $_SESSION );
                     print( "<BR><BR><BR>" );
