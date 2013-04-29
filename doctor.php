@@ -377,27 +377,37 @@
             print ( '               <b>' );
     
             // Seeing if any accounts have no doctor or are not active
-            $query          = "SELECT * FROM personal WHERE user_name_active='N'";
+            $query          = "SELECT * FROM personal";
             $sql_connection = new database_SQL;
             $sql_result_doc = $sql_connection->SQL_command( $query );
             print('<BR>Accounts awaiting activation:<BR>');
             print('<pre>');
+            print( '                <table border="1" width="100%" cellpadding="10%">' );
+            print('    <tr><td>Last Name</td><td>First Name</td><td>User Login</td></tr>');
             while( $row_data = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC ) )
             {
-                print('    '.$row_data['user_name_last'].'    '.$row_data['user_name_first'].'    '.$row_data['user_name_login'].'<BR>' );
+                if( $row_data['user_name_active'] == NULL )
+                {
+                    print('<b><tr><td>'.$row_data['user_name_last'].'</td><td>'.$row_data['user_name_first'].'</td><td>'.$row_data['user_name_login'].'</tr></b>' );
+                }
             }
-            print('</pre><BR><BR>');
+            print('</table></pre><BR><BR>');
 
             print('<b>Users awaiting a doctor assignment<BR>');
             print('<pre>');
-            $query          = "SELECT * FROM personal WHERE user_name_doctor='NULL'";
+            $query          = "SELECT * FROM personal ";
             $sql_connection = new database_SQL;
             $sql_result_doc = $sql_connection->SQL_command( $query );
+            print( '                <table border="1" width="100%" cellpadding="10%">' );
+            print('    <tr><td>Last Name</td><td>First Name</td><td>User Login</td></tr>');
             while( $row_data = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC ) )
             {
-                print('    '.$row_data['user_name_last'].'    '.$row_data['user_name_first'].'    '.$row_data['user_name_login'].'<BR>' );
+                if( ($row_data['user_name_doctor'] == NULL) && ($row_data['user_name_doctor2'] == NULL) )
+                {
+                    print('<b><tr><td>'.$row_data['user_name_last'].'</td><td>'.$row_data['user_name_first'].'</td><td>'.$row_data['user_name_login'].'</td></tr></b>' );
+                }
             }
-            print('</pre></b><BR><BR>');
+            print('</table></pre></b><BR><BR>');
             
             // seeing what was selected if anything
             if( isset($_SESSION['Selection']) == TRUE )
