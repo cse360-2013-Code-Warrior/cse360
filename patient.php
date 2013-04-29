@@ -9,7 +9,7 @@
         {
             print ( '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transittional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' );
             print ( '<html>' );
-            print ( '    <body>' );
+            print ( '    <body  background="background_image.jpg">' );
             print ( '        <head>' );
             print ( '            <title>' );
             print ( '                '.$_SESSION['Website'] );
@@ -36,6 +36,45 @@
                     break;
 
                 case "Medical Visit Information":
+                    print('<br>');
+                    print('<br>');
+                    print('<br>');
+                    print('<pre>');
+                    print('<table>');
+            
+                    //  Enter new record information
+                    print('<tr><td>');
+                    print( '<form action="index.php" method="post">' );
+                    print( '<input type="submit" name="Menu_Selection" value="New Visit">' );
+                    print( '</form>' );
+                    print('</td>');
+                    print('<td>');
+                    print(' - Enter new record information for a patient under your care');
+                    print('</td></tr>');
+            
+                    //  View Previous record
+                    print('<tr><td>');
+                    print( '<form action="index.php" method="post">' );
+                    print( '<input type="submit" name="Menu_Selection" value="Past Visits">' );
+                    print( '</form>' );
+                    print('</td>');
+                    print('<td>');
+                    print(' - View the information for a patient from a previous visit ');
+                    print('</td></tr>');
+            
+                    print('</table>');
+                    print('</pre>');
+                    unset($_SESSION['Selection']);
+                    break;
+
+                case "New Visit":
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_add($_SESSION['login_id']);
+                    $personal_record = NULL;
+                    unset($_SESSION['Selection']);
+                    break;
+
+                case "Past Visits":
                     $personal_record = new RECORD;
                     $personal_record->RECORD_medical_view($_SESSION['login_id']);
                     $personal_record = NULL;

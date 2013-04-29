@@ -56,17 +56,8 @@
             $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
             $sql_connection = NULL;
 
-            print('Account ID          ');
-            print('<input type="text" name="pst_user_id" size="'.strlen($user_id).'" value="'.$user_id.'" readonly> ');
-            print('<br>');
-
-            print('First Name          ');
-            print('<input type="text" name="pst_user_name_first" size="'.strlen($row_data['user_name_first']).'" value="'.$row_data['user_name_first'].'" readonly> ');
-            print('<br>');
-        
-            print('Last Name           ');
-            print('<input type="text" name="pst_user_name_last" size="'.strlen($row_data['user_name_last']).'" value="'.$row_data['user_name_last'].'" readonly> ');
-            print('<br>');
+            $user_FirstName     = $row_data['user_name_first'];
+            $user_LastName      = $row_data['user_name_last'];
 
             $sql_connection = new database_SQL;
             $query          = "SELECT * FROM medical_records WHERE user_id='".$user_id."' ORDER BY medical_records_date DESC";
@@ -74,13 +65,27 @@
 
             while( $row_data = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC ) )
             {
-                print('Record Date:          ');
+                print ( '            <form action="record_post.php" method="post">' );
+                print ( '                <pre><BR>' );
+                print('Account ID                ');
+                print('<input type="text" name="pst_user_id" size="'.strlen($user_id).'" value="'.$user_id.'" readonly> ');
+                print('<br>');
+    
+                print('First Name                ');
+                print('<input type="text" name="pst_user_name_first" size="'.strlen($user_FirstName).'" value="'.$user_FirstName.'" readonly> ');
+                print('<br>');
+            
+                print('Last Name                 ');
+                print('<input type="text" name="pst_user_name_last" size="'.strlen($user_LastName).'" value="'.$user_LastName.'" readonly> ');
+                print('<br><br>');
+
+                print('Record Date:              ');
                 print('<input type="text" name="medical_records_date" size="'.strlen($row_data['medical_records_date']).'" value="'.$row_data['medical_records_date'].'" readonly> ');
                 print('<br>');
 
-                print('Doctor Notes:          ');
+                print('Doctor Notes:             ');
                 print('<input type="text" name="medical_records_doctor_notes" size="'.strlen($row_data['medical_records_doctor_notes']).'" value="'.$row_data['medical_records_doctor_notes'] );
-                if( $_SESSION['login_type'] != 'doctor' )
+                if( ($_SESSION['login_type'] != 'doctor') && ($_SESSION['login_type'] != 'staff') )
                 {
                     print( '" readonly> ' );
                 }
@@ -90,7 +95,7 @@
                 }
                 print('<br>');
                 
-                print('Patient Notes:          ');
+                print('Patient Notes:            ');
                 print('<input type="text" name="medical_records_patient_notes" size="'.strlen($row_data['medical_records_patient_notes']).'" value="'.$row_data['medical_records_patient_notes'].'"' );
                 if( $_SESSION['login_type'] != 'patient' )
                 {
@@ -100,23 +105,23 @@
                 {
                     print( '"> ' );
                 }
-                print('<br>');
+                print('<br><br>');
                 
-                print('Blood Preasure Measurement:          ');
+                print('Blood Preasure Measurement:       ');
                 print('<input type="text" name="medical_records_bloodpressure" size="'.strlen($row_data['medical_records_bloodpressure']).'" value="'.$row_data['medical_records_bloodpressure'].'" > ');
                 print('<br>');
                 
-                print('Glucose Reading:          ');
+                print('Glucose Reading:                  ');
                 print('<input type="text" name="medical_records_glucose" size="'.strlen($row_data['medical_records_glucose']).'" value="'.$row_data['medical_records_glucose'].'" > ');
                 print('<br>');
                 
-                print('Weight:          ');
+                print('Weight:                           ');
                 print('<input type="text" name="medical_records_weight" size="'.strlen($row_data['medical_records_weight']).'" value="'.$row_data['medical_records_weight'].'" > ');
                 print('<br>');
 
-                print('Current Prescriptions:          ');
+                print('Current Prescriptions:            ');
                 print('<input type="text" name="medical_records_prescriptions_current" size="'.strlen($row_data['medical_records_prescriptions_current']).'" value="'.$row_data['medical_records_prescriptions_current'] );
-                if( $_SESSION['login_type'] != 'doctor' )
+                if( ($_SESSION['login_type'] != 'doctor') && ($_SESSION['login_type'] != 'staff') )
                 {
                     print( '" readonly> ' );
                 }
@@ -126,9 +131,9 @@
                 }
                 print('<br>');
 
-                print('New Prescriptions:          ');
+                print('New Prescriptions:                ');
                 print('<input type="text" name="medical_records_prescriptions_new" size="'.strlen($row_data['medical_records_prescriptions_new']).'" value="'.$row_data['medical_records_prescriptions_new']);
-                if( $_SESSION['login_type'] != 'doctor' )
+                if( ($_SESSION['login_type'] != 'doctor') || ($_SESSION['login_type'] != 'staff') )
                 {
                     print( '" readonly> ' );
                 }
@@ -137,7 +142,73 @@
                     print( '"> ' );
                 }
                 print('<br>');
+                print ( '                    <input type="submit" name="Menu_Selection" value="Modify Record">' );
+                print ( '                </pre><BR><BR>' );
+                print ( '            </form>' );
             }
+        }
+        
+        public function RECORD_add($user_id)
+        {
+            $sql_connection = new database_SQL;
+            $query          = "SELECT * FROM personal WHERE user_id='".$user_id."'";
+            $sql_result     = $sql_connection->SQL_command( $query );
+            $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
+            $sql_connection = NULL;
+
+            print ( '            <form action="record_post.php" method="post">' );
+            print ( '                <pre><BR>' );
+            print('Account ID                ');
+            print('<input type="text" name="pst_user_id" size="'.strlen($user_id).'" value="'.$user_id.'" readonly> ');
+            print('<br>');
+
+            print('First Name                ');
+            print('<input type="text" name="pst_user_name_first" size="'.strlen($row_data['user_name_first']).'" value="'.$row_data['user_name_first'].'" readonly> ');
+            print('<br>');
+        
+            print('Last Name                 ');
+            print('<input type="text" name="pst_user_name_last" size="'.strlen($row_data['user_name_last']).'" value="'.$row_data['user_name_last'].'" readonly> ');
+            print('<br>');
+
+            if( ($_SESSION['login_type'] == 'doctor') || ($_SESSION['login_type'] == 'staff') )
+            {
+                print('Doctor Notes:             ');
+                print('<input type="text" name="medical_records_doctor_notes" >' );
+            }
+            print('<br>');
+            
+            if( $_SESSION['login_type'] == 'patient' )
+            {
+                print('Patient Notes:            ');
+                print('<input type="text" name="medical_records_patient_notes" >' );
+            }
+            print('<br><br>');
+            
+            print('Blood Preasure Measurement:       ');
+            print('<input type="text" name="medical_records_bloodpressure" > ');
+            print('<br>');
+            
+            print('Glucose Reading:                  ');
+            print('<input type="text" name="medical_records_glucose" > ');
+            print('<br>');
+            
+            print('Weight:                           ');
+            print('<input type="text" name="medical_records_weight" > ');
+            print('<br>');
+
+            print('Current Prescriptions:            ');
+            print('<input type="text" name="medical_records_prescriptions_current" >' );
+            print('<br>');
+
+            if( ($_SESSION['login_type'] == 'doctor') || ($_SESSION['login_type'] == 'staff') )
+            {
+                print('New Prescriptions:                ');
+                print('<input type="text" name="medical_records_prescriptions_new" >' );
+            }
+            print('<br>');
+            print ( '                    <input type="submit" name="Menu_Selection" value="Add Record">' );
+            print ( '                </pre><BR><BR>' );
+            print ( '            </form>' );
         }
     }
 

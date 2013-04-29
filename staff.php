@@ -9,7 +9,7 @@
         {
             print ( '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transittional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' );
             print ( '<html>' );
-            print ( '    <body>' );
+            print ( '    <body  background="background_image.jpg">' );
             print ( '        <head>' );
             print ( '            <title>' );
             print ( '                '.$_SESSION['Website'] );
@@ -33,8 +33,34 @@
                     break;
 
                 case 'Accounts Post':
+                    $database_connection = new database_SQL;
+                    
+                    if( $_SESSION['Account Modify'] == 'Modify' )
+                    {
+                        $query_login = "UPDATE personal SET user_name_first='".$_SESSION['pst_user_name_first']."', user_name_last='".$_SESSION['pst_user_name_last']."', user_name_doctor='".$_SESSION['pst_user_name_doctor']."', user_name_doctor2='".$_SESSION['pst_user_name_doctor2']."',  user_name_login='".$_SESSION['pst_user_name_login']."', user_name_email='".$_SESSION['pst_user_name_email']."', user_name_password='".$_SESSION['pst_user_name_password']."', user_name_admin_approved='".$_SESSION['pst_user_name_admin_approved']."', user_name_active='".$_SESSION['pst_user_name_active']."', user_name_description='".$_SESSION['pst_user_name_description']."' WHERE user_id='".$_SESSION['pst_user_id']."'";
+
+                        //  Running Query
+                        $user_exists = $database_connection->SQL_command( $query_login );
+    
+                        if( $user_exists == TRUE )
+                        {
+                            $_SESSION['register_sucess'] = TRUE;
+                            print('<br>');
+                            print('<br>');
+                            print('<br>');
+                            print('<br>Account successfully modified.');
+                        }
+                        else
+                        {
+                            print('<br>');
+                            print('<br>');
+                            print_r($query_login);
+                            print('<br>');
+                            print('<br>Query failed to update database.');
+                            print('<br>Please try again.');
+                        }
+                    }
                     // unset all previously set terms
-                    print_r( $_SESSION );
                     unset($_SESSION['Selection']);
                     break;
 
@@ -75,8 +101,166 @@
                     unset($_SESSION['Selection']);
                     break;
 
+                case "UNKNOWN":
+                    include( 'news.txt' );
+                    break;
+
                 case "Logout":
                     header( "location:logout.php" );
+                    break;
+
+                case "Medical Visit Information":
+                    print('<br>');
+                    print('<br>');
+                    print('<br>');
+                    print('<pre>');
+                    print('<table>');
+            
+                    //  View Previous record
+                    print('<tr><td>');
+                    print( '<form action="index.php" method="post">' );
+                    print( '<input type="submit" name="Menu_Selection" value="Past Visit  ">' );
+                    print( '</form>' );
+                    print('</td>');
+                    print('<td>');
+                    print(' - View the information for a patient from a previous visit ');
+                    print('</td></tr>');
+            
+                    print('</table>');
+                    print('</pre>');
+                    unset($_SESSION['Selection']);
+                    break;
+
+                case "Medical Staff":
+                    if( $_SESSION['login_type'] =='doctor' )
+                    {
+                        $query          = "SELECT * FROM personal WHERE user_name_doctor='".$_SESSION['login_name']."' OR user_name_doctor2='".$_SESSION['login_name']."'";
+                    }
+                    if( $_SESSION['login_type'] =='staff' )
+                    {
+                        $query          = "SELECT * FROM personal WHERE user_id='".$_SESSION['login_id']."'";
+                        $sql_connection = new database_SQL;
+                        $sql_result_doc = $sql_connection->SQL_command( $query );
+                        $row_data       = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC );
+                        $query          = "SELECT * FROM personal WHERE user_name_doctor='".$row_data['user_name_doctor']."' OR user_name_doctor2='".$row_data['user_name_doctor']."'";
+                    }
+
+                    $sql_connection = new database_SQL;
+                    $sql_result_doc = $sql_connection->SQL_command( $query );
+                
+                    while( $row_data = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC ) )
+                    {
+                        print('<form action="admin_accounts_post.php" method="post">');
+                        print('<pre>');
+                
+                        print('Account ID          ');
+                        print('<input type="text" name="pst_user_id" size="'.strlen($row_data['user_id']).'" value="'.$row_data['user_id'].'" readonly> ');
+                        print('<br>');
+                
+                        print('First Name          ');
+                        print('<input type="text" name="pst_user_name_first" size="'.strlen($row_data['user_name_first']).'" value="'.$row_data['user_name_first'].'"> ');
+                        print('<br>');
+                    
+                        print('Last Name           ');
+                        print('<input type="text" name="pst_user_name_last" size="'.strlen($row_data['user_name_last']).'" value="'.$row_data['user_name_last'].'"> ');
+                        print('<br>');
+                    
+                        print('Primary Doctor      ');
+                        print('<input type="text" name="pst_user_name_doctor" size="64" value="'.$row_data['user_name_doctor'].'"> ');
+                        print('<br>');
+
+                        $query          = "SELECT * FROM contact WHERE user_id='".$row_data['user_id']."'";
+                        $sql_connection = new database_SQL;
+                        $sql_result     = $sql_connection->SQL_command( $query );
+                        $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
+
+                        print('Phone               ');
+                        print('<input type="text" name="pst_contact_phone" size="'.strlen($row_data['contact_phone']).'" value="'.$row_data['contact_phone'].'"> ');
+                        print('<br>');
+                    
+                        print('Address             ');
+                        print('<input type="text" name="pst_contact_address" size="'.strlen($row_data['contact_address']).'" value="'.$row_data['contact_address'].'"> ');
+                        print('<br>');
+                    
+                        print('City                ');
+                        print('<input type="text" name="pst_contact_city" size="'.strlen($row_data['contact_city']).'" value="'.$row_data['contact_city'].'"> ');
+                        print('<br>');
+                        
+                        print('ZIP                 ');
+                        print('<input type="text" name="pst_contact_zip" size="'.strlen($row_data['contact_zip']).'" value="'.$row_data['contact_zip'].'"> ');
+                        print('<br>');
+                        
+                        $query          = "SELECT * FROM pharmacy WHERE user_id='".$row_data['user_id']."'";
+                        $sql_connection = new database_SQL;
+                        $sql_result     = $sql_connection->SQL_command( $query );
+                        $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
+
+                        print('Pharmacy Name       ');
+                        print('<input type="text" name="pst_pharmacy_name" size="'.strlen($row_data['pharmacy_name']).'" value="'.$row_data['pharmacy_name'].'"> ');
+                        print('<br>');
+                    
+                        print('Pharmacy Address    ');
+                        print('<input type="text" name="pst_pharmacy_address" size="'.strlen($row_data['pharmacy_address']).'" value="'.$row_data['pharmacy_address'].'"> ');
+                        print('<br>');
+                    
+                        print('Pharmacy City       ');
+                        print('<input type="text" name="pst_pharmacy_city" size="'.strlen($row_data['pharmacy_city']).'" value="'.$row_data['pharmacy_city'].'"> ');
+                        print('<br>');
+                        
+                        print('Pharmacy Phone      ');
+                        print('<input type="text" name="pst_pharmacy_phone" size="'.strlen($row_data['pharmacy_phone']).'" value="'.$row_data['pharmacy_phone'].'"> ');
+                        print('<br>');
+                    
+                        print('<br>');
+                        print('       <input name="Modify" type="submit" value="Modify" >');
+                    
+                        print('<br>');
+                        print('<br>');
+                        print('<pre>');
+                        print('</form>');
+                    }
+                    print('</table>');
+
+                    unset($_SESSION['Selection']);
+                    break;
+
+                case "Past Visit  ":
+                    print( '<form action="index.php" method="post">' );
+                    if( $_SESSION['login_type'] =='doctor' )
+                    {
+                        $query          = "SELECT * FROM personal WHERE user_name_doctor='".$_SESSION['login_name']."' OR user_name_doctor2='".$_SESSION['login_name']."' ORDER BY user_name_last ASC";
+                    }
+                    if( $_SESSION['login_type'] =='staff' )
+                    {
+                        $query          = "SELECT * FROM personal WHERE user_id='".$_SESSION['login_id']."'";
+                        $sql_connection = new database_SQL;
+                        $sql_result_doc = $sql_connection->SQL_command( $query );
+                        $row_data       = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC );
+                        $query          = "SELECT * FROM personal WHERE user_name_doctor='".$row_data['user_name_doctor']."' OR user_name_doctor2='".$row_data['user_name_doctor']."' ORDER BY user_name_last ASC";
+                    }
+                    $sql_connection = new database_SQL;
+                    $sql_result_doc = $sql_connection->SQL_command( $query );
+
+                    print('<select name="USER_ID_Selected">');
+                    while( $row_data = mysqli_fetch_array( $sql_result_doc, MYSQLI_ASSOC ) )
+                    {
+                        print('<option value="'.$row_data['user_id'].'">'.$row_data['user_name_last'].',   '.$row_data['user_name_first'].'</option>');
+                    }
+                    print('</select>');
+                    print('<br>');
+                    print( '<input type="submit" name="Menu_Selection" value="Past Visits">' );
+                    print('<br>');
+                    print('<br>');
+                    print('<pre>');
+                    print('</form>');
+                    unset($_SESSION['Selection']);
+                    break;
+
+                case "Past Visits":
+                    $personal_record = new RECORD;
+                    $personal_record->RECORD_medical_view($_SESSION['USER_ID_Selected']);
+                    $personal_record = NULL;
+                    unset($_SESSION['Selection']);
                     break;
 
                 default:
@@ -84,6 +268,7 @@
                     print( "<BR><BR><BR>" );
                     print( "You choose:  " );
                     print_r( $_SESSION['Selection'] );
+                    break;
             }
         }
 

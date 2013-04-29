@@ -24,6 +24,10 @@
         print('Primary Doctor      ');
         print('<input type="text" name="pst_user_name_doctor" size="64" value="'.$row_data['user_name_doctor'].'"> ');
         print('<br>');
+
+        print('Secondary Doctor    ');
+        print('<input type="text" name="pst_user_name_doctor2" size="64" value="'.$row_data['user_name_doctor2'].'"> ');
+        print('<br>');
     
         print('Login               ');
         print('<input type="text" name="pst_user_name_login" size="'.strlen($row_data['user_name_login']).'" value="'.$row_data['user_name_login'].'"> ');

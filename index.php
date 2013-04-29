@@ -22,6 +22,11 @@
         $_SESSION['Selection'] = $_POST['Menu_Selection'];
     }
 
+    if( isset($_POST['USER_ID_Selected']) == TRUE)
+    {
+        $_SESSION['USER_ID_Selected'] = $_POST['USER_ID_Selected'];
+    }
+
     if( isset($_SESSION['Selection']) == FALSE )
     {
         $_SESSION['Selection']  = 'UNKNOWN';

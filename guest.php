@@ -14,32 +14,13 @@
         {
             print ( '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transittional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' );
             print ( '<html>' );
-            print ( '    <body>' );
+            print ( '    <body  background="background_image.jpg">' );
             print ( '        <head>' );
             print ( '            <title>' );
             print ( '                '.($_SESSION['Website']) );
             print ( '            </title>' );
         }
     
-        public function GUEST_selection( )
-        {
-            switch( $_SESSION['Selection'] )
-            {
-                case "Register":
-                    header( "location:register.php" );
-                    exit();
-                    //$this->register_print();
-                    break;
-
-                case "Sign In":
-                    //$this->login_print();
-                    break;
-
-                default:
-                    print( 'You choose:  '.$web_selection );
-            }
-        }
-
         public function GUEST_menu()
         {
             print( '                <table border="1" width="100%" cellpadding="10%">' );
@@ -74,6 +55,11 @@
             print ( '               <td width="80%" valign="top" id="view_page_data">' );
             print ( '               <b>' );
     
+            if( isset($_SESSION['Selection']) == TRUE)
+            {
+                print( '<BR>Registration completed.  <BR>Awaiting doctor office to approve account request.  <BR>When approved you will recieve an email confirming activation of account.<BR><BR>' );
+                unset($_SESSION['Selection']);
+            }
             include( 'news.txt' );
 
             print ( '               </b>' );

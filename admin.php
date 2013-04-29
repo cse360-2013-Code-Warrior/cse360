@@ -37,7 +37,7 @@
                     
                     if( $_SESSION['Account Modify'] == 'Modify' )
                     {
-                        $query_login = "UPDATE personal SET user_name_first='".$_SESSION['pst_user_name_first']."', user_name_last='".$_SESSION['pst_user_name_last']."', user_name_doctor='".$_SESSION['pst_user_name_doctor']."', user_name_login='".$_SESSION['pst_user_name_login']."', user_name_email='".$_SESSION['pst_user_name_email']."', user_name_password='".$_SESSION['pst_user_name_password']."', user_name_admin_approved='".$_SESSION['pst_user_name_admin_approved']."', user_name_active='".$_SESSION['pst_user_name_active']."', user_name_description='".$_SESSION['pst_user_name_description']."' WHERE user_id='".$_SESSION['pst_user_id']."'";
+                        $query_login = "UPDATE personal SET user_name_first='".$_SESSION['pst_user_name_first']."', user_name_last='".$_SESSION['pst_user_name_last']."', user_name_doctor='".$_SESSION['pst_user_name_doctor']."', user_name_doctor2='".$_SESSION['pst_user_name_doctor2']."',  user_name_login='".$_SESSION['pst_user_name_login']."', user_name_email='".$_SESSION['pst_user_name_email']."', user_name_password='".$_SESSION['pst_user_name_password']."', user_name_admin_approved='".$_SESSION['pst_user_name_admin_approved']."', user_name_active='".$_SESSION['pst_user_name_active']."', user_name_description='".$_SESSION['pst_user_name_description']."' WHERE user_id='".$_SESSION['pst_user_id']."'";
 
                         //  Running Query
                         $user_exists = $database_connection->SQL_command( $query_login );

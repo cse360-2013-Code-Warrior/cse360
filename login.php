@@ -9,7 +9,7 @@
         {
             print ( '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transittional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' );
             print ( '<html>' );
-            print ( '    <body>' );
+            print ( '    <body  background="background_image.jpg">' );
             print ( '        <head>' );
             print ( '            <title>' );
             print ( '                '.($_SESSION['Website']) );

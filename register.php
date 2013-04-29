@@ -49,14 +49,6 @@
                     return;
                 }
 
-                if( $test_count > 0 )
-                {
-                    print( "<BR>USERNAME already in use<BR>If you already have an account but have forgotten your username, please contact the doctor office to reset your password<BR>otherwise please choose a different username.<BR><BR>" );
-                    $this->register_print();
-                    return;
-                }
-
-                
                 $this->REGISTER_add();
                 return;
             }
@@ -169,9 +161,9 @@
             $email_data     = $_SESSION['user_name_email'];
             $user_name      = strtoupper($_SESSION['user_name_login']);
             $password_data  = $_SESSION['user_name_password'];
-            $doctor_name    = $_SESSION['user_name_doctor'];
+            $doctor_name    = strtoupper($_SESSION['user_name_doctor']);
             $SSN            = $_SESSION['user_ssn'];
-            $phone          = $_SESSION['pharmacy_phone'];
+            $phone          = $_SESSION['contact_phone'];
             $address        = $_SESSION['contact_address'];
             $city           = $_SESSION['contact_city'];
             $zip            = $_SESSION['contact_zip'];
@@ -200,9 +192,11 @@
 
             $query_login = "INSERT INTO personal(user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_doctor, user_name_admin_approved, user_name_active) VALUES('".$first_name."', '".$last_name."', '".$SSN."', '".$user_name."', '".$password_data."', '".$email_data."', 'patient', '".$doctor_name."', 'N','N')";
             $database_connection->SQL_command( $query_login );
+            $database_connection = NULL;
 
-            $query_login = "SELECT * FROM personal WHERE user_ssn='".$SSN."'";
-            $database_connection->SQL_command( $query_login );
+            $database_connection = new database_SQL;
+            $query_login = "SELECT * FROM personal WHERE user_name_first='".$first_name."' AND user_name_last='".$last_name."'";
+            $sql_result  = $database_connection->SQL_command( $query_login );
             $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
 
             $query_login = "INSERT INTO contact(user_id, contact_phone, contact_address, contact_city, contact_zip) VALUES('".$row_data['user_id']."', '".$phone."', '".$address."', '".$city."', '".$zip."')";
@@ -210,7 +204,9 @@
 
             $query_login = "INSERT INTO pharmacy(user_id, pharmacy_name, pharmacy_address, pharmacy_city, pharmacy_phone) VALUES('".$row_data['user_id']."','".$pharmacy_name."', '".$pharmacy_addr."', '".$pharmacy_city."', '".$pharmacy_ph."')";
             $database_connection->SQL_command( $query_login );
-            
+
+            $_SESSION['Selection'] = 'Registration Completed';
+
             header("location:index.php");
         }
     }
