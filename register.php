@@ -115,7 +115,7 @@
                 unset( $_SESSION['user_name_password2'] );
                 unset( $_SESSION['user_name_doctor'] );
                 unset( $_SESSION['user_ssn'] );
-                unset( $_SESSION['pharmacy_phone'] );
+                unset( $_SESSION['contact_phone'] );
                 unset( $_SESSION['contact_address'] );
                 unset( $_SESSION['contact_city'] );
                 unset( $_SESSION['contact_zip'] );
@@ -188,7 +188,7 @@
             unset( $_SESSION['user_name_password2'] );
             unset( $_SESSION['user_name_doctor'] );
             unset( $_SESSION['user_ssn'] );
-            unset( $_SESSION['pharmacy_phone'] );
+            unset( $_SESSION['contact_phone'] );
             unset( $_SESSION['contact_address'] );
             unset( $_SESSION['contact_city'] );
             unset( $_SESSION['contact_zip'] );
@@ -200,6 +200,17 @@
 
             $query_login = "INSERT INTO personal(user_name_first, user_name_last, user_ssn, user_name_login, user_name_password, user_name_email, user_name_description, user_name_doctor, user_name_admin_approved, user_name_active) VALUES('".$first_name."', '".$last_name."', '".$SSN."', '".$user_name."', '".$password_data."', '".$email_data."', 'patient', '".$doctor_name."', 'N','N')";
             $database_connection->SQL_command( $query_login );
+
+            $query_login = "SELECT * FROM personal WHERE user_ssn='".$SSN."'";
+            $database_connection->SQL_command( $query_login );
+            $row_data       = mysqli_fetch_array( $sql_result, MYSQLI_ASSOC );
+
+            $query_login = "INSERT INTO contact(user_id, contact_phone, contact_address, contact_city, contact_zip) VALUES('".$row_data['user_id']."', '".$phone."', '".$address."', '".$city."', '".$zip."')";
+            $database_connection->SQL_command( $query_login );
+
+            $query_login = "INSERT INTO pharmacy(user_id, pharmacy_name, pharmacy_address, pharmacy_city, pharmacy_phone) VALUES('".$row_data['user_id']."','".$pharmacy_name."', '".$pharmacy_addr."', '".$pharmacy_city."', '".$pharmacy_ph."')";
+            $database_connection->SQL_command( $query_login );
+            
             header("location:index.php");
         }
     }

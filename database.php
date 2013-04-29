@@ -6,7 +6,6 @@
     $sqlAccess   = new mysqli('localhost', 'root', 'usbw', 'cse360');
     if ( ($sqlAccess->connect_error) == True ) 
     {
-        $sqlAccess->close();
         $sqlAccess   = new mysqli('localhost', 'root', 'usbw');
         // Create database
         mysqli_query( $sqlAccess, "CREATE DATABASE IF NOT EXISTS cse360 CHARACTER SET ascii COLLATE ascii_bin" );

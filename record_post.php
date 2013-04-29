@@ -28,6 +28,6 @@
         $sql_connection = NULL;
     }
 
-
-    header("location:index.php");
+    print_r($_POST);
+    //header("location:index.php");
 </script>
